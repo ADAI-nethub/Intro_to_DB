@@ -1,65 +1,51 @@
--- task_2.sql
-
--- Select the database to work with
+-- Use the target database (make sure it exists)
 USE ALX_BOOK_STORE;
 
--- Create the 'Authors' table
--- This table stores information about authors.
+-- Drop tables if they already exist to prevent errors during multiple runs
+DROP TABLE IF EXISTS ORDER_DETAILS;
+DROP TABLE IF EXISTS ORDERS;
+DROP TABLE IF EXISTS CUSTOMERS;
+DROP TABLE IF EXISTS BOOKS;
+DROP TABLE IF EXISTS AUTHORS;
+
+-- Authors table
 CREATE TABLE AUTHORS (
-    AUTHOR_ID INT PRIMARY KEY AUTO_INCREMENT, -- Primary Key: Unique identifier for each author, auto-increments.
-    AUTHOR_NAME VARCHAR(215) NOT NULL         -- Author's full name, cannot be empty.
+    AUTHOR_ID INT AUTO_INCREMENT PRIMARY KEY,
+    AUTHOR_NAME VARCHAR(215) NOT NULL
 );
 
--- Create the 'Books' table
--- This table stores information about books available in the bookstore.
+-- Books table
 CREATE TABLE BOOKS (
-    BOOK_ID INT PRIMARY KEY AUTO_INCREMENT,  -- Primary Key: Unique identifier for each book, auto-increments.
-    TITLE VARCHAR(130) NOT NULL,             -- The title of the book, cannot be empty.
-    AUTHOR_ID INT NOT NULL,                  -- Foreign Key: Links to the AUTHOR_ID in the Authors table.
-    PRICE DOUBLE NOT NULL,                   -- The price of the book, cannot be empty.
-    PUBLICATION_DATE DATE NOT NULL,          -- The publication date of the book, cannot be empty.
-    -- Define the foreign key constraint:
-    -- Ensures that every AUTHOR_ID in this table must exist in the AUTHORS table.
-    -- ON DELETE CASCADE means if an author is deleted, all their books are also deleted.
+    BOOK_ID INT AUTO_INCREMENT PRIMARY KEY,
+    TITLE VARCHAR(130) NOT NULL,
+    AUTHOR_ID INT NOT NULL,
+    PRICE DECIMAL(10,2) NOT NULL,
+    PUBLICATION_DATE DATE NOT NULL,
     FOREIGN KEY (AUTHOR_ID) REFERENCES AUTHORS(AUTHOR_ID) ON DELETE CASCADE
 );
 
--- Create the 'Customers' table
--- This table stores information about customers.
+-- Customers table
 CREATE TABLE CUSTOMERS (
-    CUSTOMER_ID INT PRIMARY KEY AUTO_INCREMENT, -- Primary Key: Unique identifier for each customer, auto-increments.
-    CUSTOMER_NAME VARCHAR(215) NOT NULL,        -- Customer's full name, cannot be empty.
-    EMAIL VARCHAR(215) NOT NULL UNIQUE,         -- Customer's email address, must be unique for each customer.
-    ADDRESS TEXT                                -- Customer's physical address.
+    CUSTOMER_ID INT AUTO_INCREMENT PRIMARY KEY,
+    CUSTOMER_NAME VARCHAR(215) NOT NULL,
+    EMAIL VARCHAR(215) NOT NULL UNIQUE,
+    ADDRESS TEXT
 );
 
--- Create the 'Orders' table
--- This table stores information about orders placed by customers.
+-- Orders table
 CREATE TABLE ORDERS (
-    ORDER_ID INT PRIMARY KEY AUTO_INCREMENT,   -- Primary Key: Unique identifier for each order, auto-increments.
-    CUSTOMER_ID INT NOT NULL,                  -- Foreign Key: Links to the CUSTOMER_ID in the Customers table.
-    ORDER_DATE DATE NOT NULL,                  -- The date the order was placed, cannot be empty.
-    -- Define the foreign key constraint:
-    -- Ensures that every CUSTOMER_ID in this table must exist in the CUSTOMERS table.
-    -- ON DELETE CASCADE means if a customer is deleted, all their orders are also deleted.
+    ORDER_ID INT AUTO_INCREMENT PRIMARY KEY,
+    CUSTOMER_ID INT NOT NULL,
+    ORDER_DATE DATE NOT NULL,
     FOREIGN KEY (CUSTOMER_ID) REFERENCES CUSTOMERS(CUSTOMER_ID) ON DELETE CASCADE
 );
 
--- Create the 'Order_Details' table
--- This table stores information about the books included in each order.
--- This is a junction table for a many-to-many relationship between Orders and Books.
+-- Order_Details table
 CREATE TABLE ORDER_DETAILS (
-    ORDERDETAILID INT PRIMARY KEY AUTO_INCREMENT, -- Primary Key: Unique identifier for each order detail entry, auto-increments.
-    ORDER_ID INT NOT NULL,                        -- Foreign Key: Links to the ORDER_ID in the Orders table.
-    BOOK_ID INT NOT NULL,                         -- Foreign Key: Links to the BOOK_ID in the Books table.
-    QUANTITY DOUBLE NOT NULL,                     -- The quantity of the specific book in this order detail, cannot be empty.
-    -- Define foreign key constraint for ORDER_ID:
-    -- Ensures that every ORDER_ID in this table must exist in the ORDERS table.
-    -- ON DELETE CASCADE means if an order is deleted, its details are also deleted.
+    ORDERDETAIL_ID INT AUTO_INCREMENT PRIMARY KEY,
+    ORDER_ID INT NOT NULL,
+    BOOK_ID INT NOT NULL,
+    QUANTITY INT NOT NULL,
     FOREIGN KEY (ORDER_ID) REFERENCES ORDERS(ORDER_ID) ON DELETE CASCADE,
-    -- Define foreign key constraint for BOOK_ID:
-    -- Ensures that every BOOK_ID in this table must exist in the BOOKS table.
-    -- ON DELETE CASCADE means if a book is deleted, its details in orders are also deleted.
     FOREIGN KEY (BOOK_ID) REFERENCES BOOKS(BOOK_ID) ON DELETE CASCADE
 );
-
