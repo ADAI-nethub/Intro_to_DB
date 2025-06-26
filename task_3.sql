@@ -5,4 +5,5 @@
 -- for example: mysql -u user -p database_name < task_3.sql
 
 SHOW TABLES;
+USE alx_book_store;
 
