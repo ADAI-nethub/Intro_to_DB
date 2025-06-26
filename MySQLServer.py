@@ -70,7 +70,18 @@ def create_alx_book_store_database():
             ("To Kill a Mockingbird", "Harper Lee")
         ]
         connection = None
-    cursor = None
+
+    try:
+    # your risky operations
+    ...
+except Exception as e:
+    # handle the error
+    print(f"Error: {e}")
+finally:
+    # optional: clean up
+    print("Done.")
+
+
     try:
         # Establish a connection to the MySQL server.
         # We connect without specifying a database initially, as we are creating one.
