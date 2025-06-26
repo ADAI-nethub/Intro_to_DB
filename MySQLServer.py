@@ -1,5 +1,5 @@
 import mysql.connector
-from mysql.connector import Error
+except mysql.connector.Error as e:  # from mysql.connector import 
 
 def create_alx_book_store_database():
     """
@@ -36,24 +36,54 @@ def create_alx_book_store_database():
         # Define the SQL query to create the database.
         # The 'IF NOT EXISTS' clause is crucial as it prevents an error if
         # a database with the same name already exists, fulfilling the requirement.
+     # CREATE DATABASE
         create_db_query = "CREATE DATABASE IF NOT EXISTS alx_book_store"
-
         print(f"Executing query: '{create_db_query}'")
         cursor.execute(create_db_query)
-
-        # Commit the transaction to apply the changes to the database.
-        connection.commit()
-
         print("Database 'alx_book_store' created successfully!")
 
-    except Error as e:
-        # Catch and handle any errors that occur during connection or query execution.
-        # This includes issues like incorrect credentials, host unreachable, etc.
-        print(f"Error: Failed to connect to the database or create 'alx_book_store'.")
+        # SHOW DATABASES
+        print("Showing all databases:")
+        cursor.execute("SHOW DATABASES")
+        for db in cursor.fetchall():
+            print(f" - {db[0]}")
+
+        # Connect to the newly created database
+        connection.database = "alx_book_store"
+
+        # CREATE TABLE
+        create_table_query = """
+        CREATE TABLE IF NOT EXISTS books (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            title VARCHAR(255) NOT NULL,
+            author VARCHAR(255) NOT NULL
+        )
+        """
+        cursor.execute(create_table_query)
+        print("Table 'books' ensured.")
+
+        # INSERT SAMPLE DATA
+        insert_query = "INSERT INTO books (title, author) VALUES (%s, %s)"
+        sample_data = [
+            ("The Alchemist", "Paulo Coelho"),
+            ("1984", "George Orwell"),
+            ("To Kill a Mockingbird", "Harper Lee")
+        ]
+        cursor.executemany(insert_query, sample_data)
+        connection.commit()
+        print("Sample data inserted into 'books' table.")
+
+        # SELECT QUERY
+        print("Running SELECT query on 'books' table:")
+        cursor.execute("SELECT * FROM books")
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+
+    except mysql.connector.Error as e:
+        print("Error: Failed to connect to the database or run queries.")
         print(f"Details: {e}")
     finally:
-        # Ensure that the cursor and connection are closed to release resources,
-        # regardless of whether an error occurred or not.
         if cursor:
             print("Closing database cursor.")
             cursor.close()
@@ -63,6 +93,4 @@ def create_alx_book_store_database():
         print("Database operation concluded.")
 
 if __name__ == "__main__":
-    # This block ensures that create_alx_book_store_database() is called
-    # only when the script is executed directly (not when imported as a module).
     create_alx_book_store_database()
