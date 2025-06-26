@@ -1,5 +1,5 @@
 import mysql.connector
-except mysql.connector.Error as e:  # from mysql.connector import 
+from mysql.connector import Error
 
 def create_alx_book_store_database():
     """
@@ -26,7 +26,7 @@ def create_alx_book_store_database():
         print(f"Attempting to connect to MySQL server at {DB_CONFIG['host']} with user '{DB_CONFIG['user']}'...")
         connection = mysql.connector.connect(
             host=DB_CONFIG['host'],
-            user=DB_CONFIG['user'],
+            user=DB_CONFIG['root'],
             password=DB_CONFIG['MyNewPassword123!']
         )
         print("Successfully connected to MySQL server.")
