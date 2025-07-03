@@ -9,8 +9,8 @@ SELECT
 FROM 
     INFORMATION_SCHEMA.COLUMNS 
 WHERE 
-    TABLE_SCHEMA = DATABASE() 
-    AND TABLE_NAME = 'books';
+    TABLE_SCHEMA = 'alx_book_store',
+    TABLE_NAME = 'Books' ;
 
 
 
